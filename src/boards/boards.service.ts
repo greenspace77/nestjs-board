@@ -17,8 +17,8 @@ export class BoardsService {
       id: uuid(),
       title,
       description,
-      status: BoardStatus.PUBLIC
-    }
+      status: BoardStatus.PUBLIC,
+    };
 
     this.boards.push(board);
     return board;
@@ -27,13 +27,14 @@ export class BoardsService {
   getBoardById(id: string): Board {
     const found = this.boards.find((board) => board.id === id);
     if (!found) {
-      throw new NotFoundException(`Board with ID "${id}" not found`);
+      throw new NotFoundException(`Board with ID ${id} not found`);
     }
     return found;
   }
 
   deleteBoard(id: string): void {
-    this.boards = this.boards.filter((board) => board.id !== id);
+    const found = this.getBoardById(id);
+    this.boards = this.boards.filter((board) => board.id !== found.id);
   }
 
   updateBoardStatus(id: string, status: BoardStatus): Board {
