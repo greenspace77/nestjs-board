@@ -17,6 +17,11 @@ export class BoardsService {
   // getAllBoards(): Board[] {
   //   return this.boards;
   // }
+
+  async getAllBoards(): Promise<Board[]> {
+    return this.boardRepository.find();
+  }
+
   // createBoard(createBoardDto: CreateBoardDto) {
   //   const { title, description } = createBoardDto;
   //   const board: Board = {
