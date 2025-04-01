@@ -7,19 +7,8 @@ import { DataSource } from 'typeorm';
 import { Board } from './board.entity';
 
 @Module({
-  //imports: [TypeOrmModule.forFeature([BoardRepository])],
+  imports: [TypeOrmModule.forFeature([BoardRepository])],
   controllers: [BoardsController],
-  providers: [
-    BoardsService,
-    {
-      provide: 'BOARD_REPOSITORY',
-      useFactory: (dataSource: DataSource) => {
-        return dataSource
-          .getRepository(Board)
-          .extend(BoardRepository.prototype);
-      },
-      inject: [DataSource],
-    },
-  ],
+  providers: [BoardsService]
 })
 export class BoardsModule {}
