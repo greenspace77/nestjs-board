@@ -1,20 +1,34 @@
-import { DataSource, Repository } from "typeorm";
-import { User } from "./user.entity";
-import { Injectable } from "@nestjs/common";
-import { AuthCredentialsDto } from "./dto/auth-credential.dto";
+import { DataSource, Repository } from 'typeorm';
+import { User } from './user.entity';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { AuthCredentialsDto } from './dto/auth-credential.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
   constructor(private dataSource: DataSource) {
-      super(User, dataSource.createEntityManager());
-    }
+    super(User, dataSource.createEntityManager());
+  }
 
   async createUser(authCredentialDto: AuthCredentialsDto): Promise<void> {
-    const {username, password} = authCredentialDto;
+    const { username, password } = authCredentialDto;
     const user = this.create({
-      username, 
-      password
+      username,
+      password,
     });
-    await this.save(user);
+
+    try {
+      await this.save(user);
+    } catch (error) {
+      if (error.code === '23505') {
+        // duplicate username
+        throw new ConflictException('Username already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 }
