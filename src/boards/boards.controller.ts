@@ -31,9 +31,9 @@ export class BoardsController {
   // }
 
   @Get()
-    getAllBoard(): Promise<Board[]> {
-      return this.boardsService.getAllBoards();
-    }
+  getAllBoard(@GetUser() user: User): Promise<Board[]> {
+    return this.boardsService.getAllBoards(user);
+  }
 
   // @Post()
   // @UsePipes(ValidationPipe)
@@ -43,8 +43,10 @@ export class BoardsController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoardDto: CreateBoardDto,
-  @GetUser() user:User): Promise<Board> {
+  createBoard(
+    @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: User,
+  ): Promise<Board> {
     return this.boardsService.createBoard(createBoardDto, user);
   }
 
@@ -58,10 +60,10 @@ export class BoardsController {
   //   return this.boardsService.getBoardById(id);
   // }
 
-@Delete('/:id')
-deleteBoard(@Param('id', ParseIntPipe) id): Promise<void> {
-  return this.boardsService.deleteBoard(id);
-}
+  @Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id): Promise<void> {
+    return this.boardsService.deleteBoard(id);
+  }
 
   // @Delete('/:id')
   // deleteBoard(@Param('id') id: string): void {
